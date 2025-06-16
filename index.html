@@ -4,21 +4,91 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Countdown Timers</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin-top: 50px;
-      background-color: #f4f4f4;
-    }
-    h1 {
-      margin-bottom: 40px;
-    }
-    .timer {
-      font-size: 2em;
-      margin: 20px;
-    }
-  </style>
+<style>
+  @keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulseGlowBlue {
+    0% { box-shadow: 0 0 10px rgba(0, 123, 255, 0.3); }
+    50% { box-shadow: 0 0 25px rgba(0, 123, 255, 0.8); }
+    100% { box-shadow: 0 0 10px rgba(0, 123, 255, 0.3); }
+  }
+
+  @keyframes pulseGlowGreen {
+    0% { box-shadow: 0 0 10px rgba(40, 167, 69, 0.3); }
+    50% { box-shadow: 0 0 25px rgba(40, 167, 69, 0.8); }
+    100% { box-shadow: 0 0 10px rgba(40, 167, 69, 0.3); }
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #0f0f1a;
+    color: #e0e0e0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+
+  h1 {
+    font-size: 2.8em;
+    color: #ffffff;
+    margin-bottom: 40px;
+    text-shadow: 0 0 6px #00f7ff;
+    animation: fadeIn 1s ease-out;
+  }
+
+  .timer {
+    background: #1e1e2f;
+    padding: 25px 35px;
+    margin: 20px;
+    border-radius: 15px;
+    min-width: 340px;
+    animation: fadeIn 1s ease-out;
+    transition: transform 0.3s ease;
+  }
+
+  .timer:hover {
+    transform: scale(1.05);
+  }
+
+  .label {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #bbb;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .time-value {
+    font-size: 2em;
+    font-weight: bold;
+    letter-spacing: 1px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    color: #00f7ff;
+    text-shadow: 0 0 6px #00f7ff;
+  }
+
+  #departure-timer {
+    border-left: 6px solid #007BFF;
+    animation: pulseGlowBlue 2s infinite ease-in-out;
+  }
+
+  #arrival-timer {
+    border-left: 6px solid #28A745;
+    animation: pulseGlowGreen 2s infinite ease-in-out;
+  }
+</style>
+
+
 </head>
 <body>
   <h1>Time left</h1>
@@ -56,15 +126,18 @@
       const dep = getTimeRemaining(departureTime);
       const arr = getTimeRemaining(arrivalTime);
 
-      document.getElementById("departure-timer").textContent =
-        dep.total > 0
-          ? `Time to Departure: ${dep.days}d ${dep.hours}:${dep.minutes}:${dep.seconds}`
-          : "Departed";
+      document.getElementById("departure-timer").innerHTML =
+  dep.total > 0
+    ? `<div class="label">🛫 Time to Departure:</div>
+       <div class="time-value">${dep.days}d ${dep.hours}:${dep.minutes}:${dep.seconds}</div>`
+    : `<div class="label">🛫 Departure:</div><div class="time-value">✅ Departed</div>`;
 
-      document.getElementById("arrival-timer").textContent =
-        arr.total > 0
-          ? `Time to Arrival: ${arr.days}d ${arr.hours}:${arr.minutes}:${arr.seconds}`
-          : "Arrived";
+document.getElementById("arrival-timer").innerHTML =
+  arr.total > 0
+    ? `<div class="label">🛬 Time to Arrival:</div>
+       <div class="time-value">${arr.days}d ${arr.hours}:${arr.minutes}:${arr.seconds}</div>`
+    : `<div class="label">🛬 Arrival:</div><div class="time-value">✅ Arrived</div>`;
+
     }
 
     setInterval(updateTimers, 1000);
