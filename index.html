@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Countdown Timers</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+      background-color: #f4f4f4;
+    }
+    h1 {
+      margin-bottom: 40px;
+    }
+    .timer {
+      font-size: 2em;
+      margin: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Time left</h1>
+  <div class="timer" id="departure-timer">Time to Departure: --d --:--:--</div>
+  <div class="timer" id="arrival-timer">Time to Arrival: --d --:--:--</div>
+
+  <script>
+    function toUTCDate(year, month, day, hour, minute, offsetHours) {
+      // offsetHours: Time zone offset from UTC (e.g. Calgary: -6, Warsaw: +2)
+      return new Date(Date.UTC(year, month - 1, day, hour - offsetHours, minute));
+    }
+
+    // Calgary time is UTC-6 (MDT), Warsaw time is UTC+2 (CEST)
+    const departureTime = toUTCDate(2025, 7, 19, 15, 15, -6);
+    const arrivalTime = toUTCDate(2025, 7, 20, 9, 55, 2);
+
+    function updateTimers() {
+      const now = new Date();
+
+      function getTimeRemaining(target) {
+        const total = target - now;
+        const seconds = Math.floor((total / 1000) % 60);
+        const minutes = Math.floor((total / 1000 / 60) % 60);
+        const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
+        const days = Math.floor(total / (1000 * 60 * 60 * 24));
+        return {
+          total,
+          days,
+          hours: String(hours).padStart(2, '0'),
+          minutes: String(minutes).padStart(2, '0'),
+          seconds: String(seconds).padStart(2, '0')
+        };
+      }
+
+      const dep = getTimeRemaining(departureTime);
+      const arr = getTimeRemaining(arrivalTime);
+
+      document.getElementById("departure-timer").textContent =
+        dep.total > 0
+          ? `Time to Departure: ${dep.days}d ${dep.hours}:${dep.minutes}:${dep.seconds}`
+          : "Departed";
+
+      document.getElementById("arrival-timer").textContent =
+        arr.total > 0
+          ? `Time to Arrival: ${arr.days}d ${arr.hours}:${arr.minutes}:${arr.seconds}`
+          : "Arrived";
+    }
+
+    setInterval(updateTimers, 1000);
+    updateTimers(); // initial call
+  </script>
+</body>
+</html>
